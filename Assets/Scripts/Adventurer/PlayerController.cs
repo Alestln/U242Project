@@ -1,7 +1,7 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections))]
 public class PlayerController : MonoBehaviour
@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private AnimationController animationController;
 
     [SerializeField]
-    private TextMeshProUGUI coinsText;
+    private Text coinsText;
 
     [Header("Stats")]
 
@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     private float runSpeed = 15f;
 
     [SerializeField]
-    private float jumpSpeed = 40f;
+    private float jumpSpeed = 10f;
 
     [SerializeField]
     private float slideSpeed = 3f;
@@ -50,11 +50,18 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 moveInput = Vector2.zero;
 
+    private int coins = 0;
+
     private void Awake()
     {
         touchingDirections = GetComponent<TouchingDirections>();
         rigidBody = GetComponent<Rigidbody2D>();
         animationController = GetComponent<AnimationController>();
+    }
+
+    private void Start()
+    {
+        UpdateCoinsUI();
     }
 
     private void FixedUpdate()
@@ -202,5 +209,16 @@ public class PlayerController : MonoBehaviour
         {
             IsRunning = false;
         }
+    }
+
+    public void AddCoins(int value)
+    {
+        coins += value;
+        UpdateCoinsUI();
+    }
+
+    private void UpdateCoinsUI()
+    {
+        coinsText.text = $"Coins: {coins}";
     }
 }
