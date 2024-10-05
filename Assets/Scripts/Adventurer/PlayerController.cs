@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -12,7 +13,10 @@ public class PlayerController : MonoBehaviour
     private AnimationController animationController;
 
     [SerializeField]
-    private Text coinsText;
+    private TMP_Text coinsText;
+
+    [SerializeField]
+    private Image hpBarUI; 
 
     [Header("Stats")]
 
@@ -52,6 +56,10 @@ public class PlayerController : MonoBehaviour
 
     private int coins = 0;
 
+    private int currentHp = 50;
+
+    private int maxHp = 100; 
+
     private void Awake()
     {
         touchingDirections = GetComponent<TouchingDirections>();
@@ -62,6 +70,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         UpdateCoinsUI();
+        UpdateHpBarUI();
     }
 
     private void FixedUpdate()
@@ -220,5 +229,16 @@ public class PlayerController : MonoBehaviour
     private void UpdateCoinsUI()
     {
         coinsText.text = $"Coins: {coins}";
+    }
+
+    public void UpdateHp(int value)
+    {
+        currentHp = Mathf.Clamp(currentHp + value, 0, maxHp);
+        UpdateHpBarUI();
+    }
+
+    private void UpdateHpBarUI()
+    {
+        hpBarUI.fillAmount = Mathf.Clamp(currentHp / (float)maxHp, 0f, 1f);
     }
 }
