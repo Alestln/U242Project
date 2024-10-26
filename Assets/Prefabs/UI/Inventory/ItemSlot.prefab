@@ -240,8 +240,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5634567689668315568}
   - {fileID: 6669024087421550532}
+  - {fileID: 5634567689668315568}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -301,3 +301,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemImage: {fileID: 3194957842322441801}
   quantityText: {fileID: 4408143825320321482}
+  storedItem: {fileID: 0}

@@ -10,30 +10,33 @@ public class ItemSlot : MonoBehaviour
     [SerializeField]
     private TMP_Text quantityText;
 
-    private Item storedItem;
+    public ItemDataSO itemData;
 
-    public void AddItem(Item item)
+    public void SetItem(ItemDataSO itemData, int quantity)
     {
-        storedItem = item;
-        UpdateSlot();
+        this.itemData = itemData;
+
+        itemImage.sprite = this.itemData.Sprite;
+        itemImage.enabled = true;
+
+        quantityText.text = quantity.ToString();
+        quantityText.enabled = true;
     }
 
-    private void UpdateSlot()
+    public void ClearSlot()
     {
-        if (storedItem is not null)
-        {
-            itemImage.sprite = storedItem.GetComponent<SpriteRenderer>().sprite;
-            quantityText.text = storedItem.Quantity.ToString();
-
-        }
+        itemData = null;
+        itemImage.enabled = false;
+        quantityText.enabled = false;
     }
 
     public void AddQuantity(int quantity)
     {
-        if (storedItem is not null)
+        if (itemData != null)
         {
-            storedItem.Quantity += quantity;
-            UpdateSlot();
+            int currentQuantity = int.Parse(quantityText.text);
+            currentQuantity += quantity;
+            quantityText.text = currentQuantity.ToString();
         }
     }
 }

@@ -1,34 +1,33 @@
-using System.Collections.Generic;
-using Unity.Collections;
 using UnityEngine;
 
 public class Item : MonoBehaviour
 {
     [SerializeField]
-    private InventoryManager inventoryManager;
+    private ItemDataSO itemData;
 
-    public string Name { get; set; }
-    public int Quantity { get; set; }
+    [SerializeField]
+    private int Quantity;
 
-    private void Start()
+    private SpriteRenderer spriteRenderer;
+
+    private void Awake()
     {
-        var spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (spriteRenderer is not null)
+        if (spriteRenderer != null)
         {
-            Name = spriteRenderer.sprite.name;
+            spriteRenderer.sprite = itemData.Sprite;
         }
-
-        Quantity = 1;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         var player = collision.gameObject.GetComponent<PlayerController>();
 
-        if (player is not null)
+        if (player != null)
         {
-            inventoryManager.AddItem(this);
+            InventoryManager.Instance.AddItem(itemData, Quantity);
+
             Destroy(gameObject);
         }
     }

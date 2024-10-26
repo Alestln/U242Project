@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager Instance;
+
     [SerializeField]
     private GameObject inventoryPanel;
 
@@ -15,11 +17,37 @@ public class InventoryManager : MonoBehaviour
     [SerializeField]
     private ItemSlot itemSlotPrefab;
 
-    Dictionary<string, ItemSlot> inventorySlots = new Dictionary<string, ItemSlot>();
+    [SerializeField]
+    private int slotCount;
+
+    private List<ItemSlot> itemSlots = new List<ItemSlot>();
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     private void Start()
     {
         inventoryPanel.SetActive(visibleInventoryPanel);
+        InitializeSlots();
+    }
+
+    public void InitializeSlots()
+    {
+        for (var i = 0; i < slotCount; i++)
+        {
+            var newItemSlot = Instantiate(itemSlotPrefab, inventorySlotsPanel);
+            newItemSlot.ClearSlot();
+            itemSlots.Add(newItemSlot);
+        }
     }
 
     public void OnToggle(InputAction.CallbackContext context)
@@ -33,17 +61,26 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void AddItem(Item item)
+    public void AddItem(ItemDataSO itemData, int quantity)
     {
-        if (inventorySlots.TryGetValue(item.Name, out ItemSlot existingItem))
+        foreach (var slot in itemSlots)
         {
-            existingItem.AddQuantity(item.Quantity);
+            if (slot.itemData != null && slot.itemData == itemData)
+            {
+                slot.AddQuantity(quantity);
+                return;
+            }
         }
-        else
+
+        foreach (var slot in itemSlots)
         {
-            ItemSlot newItemSlot = Instantiate(itemSlotPrefab, inventorySlotsPanel);
-            newItemSlot.AddItem(item);
-            inventorySlots.Add(item.Name, newItemSlot);
+            if (slot.itemData == null)
+            {
+                slot.SetItem(itemData, quantity);
+                return;
+            }
         }
+
+        Debug.Log("Нет доступных слотов для добавления предмета: " + itemData.Name);
     }
 }
